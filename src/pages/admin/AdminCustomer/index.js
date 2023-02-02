@@ -1,24 +1,16 @@
-import request from '~/utils/request';
 import { useEffect, useState } from 'react';
-// import * as userService from '~/apiService/userService';
+import { getUsersByParams } from '~/utils';
 function AdminCustomer() {
     const [listUser, setListUser] = useState([]);
     useEffect(() => {
-        request
-            .get('users', {})
+        getUsersByParams({})
             .then(function (response) {
-                console.log(response.data);
-                setListUser(response.data);
+                setListUser(response);
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
             });
-        // const fetchApi = async () => {
-        //     const result = await userService.user();
-        //     setListUser(result);
-        // };
-        // fetchApi();
     }, []);
 
     return (
@@ -42,13 +34,19 @@ function AdminCustomer() {
                         <tbody>
                             {listUser.map((user) => {
                                 return (
-                                    <tr key={user.id}>
+                                    <tr
+                                        onClick={() => {
+                                            //Handle click
+                                            alert(user.name);
+                                        }}
+                                        key={user.id}
+                                    >
                                         <td>{user.id}</td>
-                                        <td>{user.name}</td>
+                                        <td>{user.name || '???'}</td>
                                         <td>{user.username}</td>
-                                        <td>{user.email}</td>
-                                        <td>{user.phone}</td>
-                                        <td>{user.address}</td>
+                                        <td>{user.email || '???'}</td>
+                                        <td>{user.phone || '???'}</td>
+                                        <td>{user.address || '???'}</td>
                                     </tr>
                                 );
                             })}

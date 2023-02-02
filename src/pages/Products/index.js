@@ -3,6 +3,49 @@ import { useEffect, useState } from 'react';
 import { getProductsByParams } from '~/utils';
 import { formatCash } from '~/components/Format';
 function Products() {
+    //Data render
+    const sortBySelectData = [
+        {
+            value: 'default',
+            text: 'Mặc định',
+        },
+        {
+            value: 'nameasc',
+            text: 'Tên (A - Z)',
+        },
+        {
+            value: 'namedesc',
+            text: 'Tên (Z - A)',
+        },
+        {
+            value: 'priceasc',
+            text: 'Giá (Thấp > Cao)',
+        },
+        {
+            value: 'pricedesc',
+            text: 'Giá (Cao > Thấp)',
+        },
+        {
+            value: 'new',
+            text: 'Mới nhất',
+        },
+    ];
+    const brandData = [
+        {
+            id: 'brand-1',
+            text: 'Thương hiệu 1',
+        },
+        {
+            id: 'brand-2',
+            text: 'Thương hiệu 2',
+        },
+        {
+            id: 'brand-3',
+            text: 'Thương hiệu 3',
+        },
+    ];
+
+    const [brandChecked, setBrandChecked] = useState([]);
     const [listProduct, setListProduct] = useState([]);
     const [sortType, setSortType] = useState('default');
     const [filter, setFilter] = useState('');
@@ -45,6 +88,18 @@ function Products() {
             });
         // eslint-disable-next-line
     }, [filter, sortType]);
+
+    //Xử lý brand checked
+    const handleCheckBrand = (id) => {
+        setBrandChecked((prev) => {
+            const isChecked = brandChecked.includes(id);
+            if (isChecked) return brandChecked.filter((item) => item !== id);
+            else {
+                return [...prev, id];
+            }
+        });
+    };
+
     return (
         <section id="product" className="product">
             <div className="product-container">
@@ -74,12 +129,13 @@ function Products() {
                                     setSortType(e.target.value);
                                 }}
                             >
-                                <option value="default">Mặc định</option>
-                                <option value="nameasc">Tên (A - Z)</option>
-                                <option value="namedesc">Tên (Z - A)</option>
-                                <option value="priceasc">Giá (Thấp &gt; Cao)</option>
-                                <option value="pricedesc">Giá (Cao &gt; Thấp)</option>
-                                <option value="new">Mới nhất</option>
+                                {sortBySelectData.map((sort, index) => {
+                                    return (
+                                        <option key={index} value={sort.value}>
+                                            {sort.text}
+                                        </option>
+                                    );
+                                })}
                             </select>
                         </div>
                     </div>
@@ -102,11 +158,22 @@ function Products() {
                                 <option value="shoe">Giày</option>
                             </select>
                         </div>
-                        {/* <div className="product-body-filter-brand">
+                        <div className="product-body-filter-brand">
                             <h3>Thương hiệu</h3>
                             <div className="product-body-filter-brand-list">
                                 <ul>
-                                    <li>
+                                    {brandData.map((brand) => (
+                                        <li key={brand.id}>
+                                            <input
+                                                type="checkbox"
+                                                id={brand.id}
+                                                checked={brandChecked.includes(brand.id)}
+                                                onChange={() => handleCheckBrand(brand.id)}
+                                            />
+                                            <label htmlFor={brand.id}>{brand.text}</label>
+                                        </li>
+                                    ))}
+                                    {/* <li>
                                         <input type="checkbox" id="brand-1" name="brand-1" />
                                         <label htmlFor="brand-1">Thương hiệu 1</label>
                                     </li>
@@ -117,10 +184,10 @@ function Products() {
                                     <li>
                                         <input type="checkbox" id="brand-3" name="brand-3" />
                                         <label htmlFor="brand-3">Thương hiệu 3</label>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
-                        </div> */}
+                        </div>
                         <div className="product-body-filter-price">
                             <h3>Giá</h3>
                             <div className="product-body-filter-price-list">
